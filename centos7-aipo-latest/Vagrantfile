@@ -1,0 +1,17 @@
+VAGRANTFILE_API_VERSION = "2"
+
+IMAGE_NAME = "centos7-aipo-latest"
+AIPO_INSTALL_SCRIPT = "../install_aipo-latest.sh"
+IP_ADDRESS = "192.168.1.103"
+IMAGE_BOX = "centos/7"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = IMAGE_BOX
+  config.vm.provider :virtualbox do |vb|
+    vb.name = IMAGE_NAME
+    vb.memory = "1024"
+  end
+  config.vm.network "public_network", ip: IP_ADDRESS, bridge: "en0: Wi-Fi (AirPort)"
+  config.vm.synced_folder "../vagrant_share", "/vagrant_data"
+  config.vm.provision "shell", :path => AIPO_INSTALL_SCRIPT
+end
