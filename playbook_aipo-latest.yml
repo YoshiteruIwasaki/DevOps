@@ -1,0 +1,76 @@
+- hosts: aipo-latest
+  sudo: yes
+  user: vagrant
+  vars:
+    usr_local: "/usr/local" 
+    usr_local_distribute: "{{ usr_local }}/src/distribute" 
+    datestr: "{{ lookup('pipe','date +%Y%m%d') }}"
+    aipo_installer_dir: "aipo-latest-{{ datestr }}-linux-x64" 
+    aipo_install_url: "{{ usr_local_distribute }}/target/aipo-latest-{{ datestr }}-linux-x64.tar.gz" 
+  tasks:
+    - name: install gcc
+      yum: name=gcc state=latest
+
+    - name: install nmap
+      yum: name=nmap state=latest
+
+    - name: install lsof
+      yum: name=lsof state=latest
+
+    - name: install unzip
+      yum: name=unzip state=latest
+
+    - name: install readline-devel
+      yum: name=readline-devel state=latest
+
+    - name: install zlib-devel
+      yum: name=zlib-devel state=latest
+      
+    - name: install git
+      yum: name=git state=latest
+
+    - name: install java-1.8.0-openjdk-devel
+      yum: name=java-1.8.0-openjdk-devel state=latest
+      
+    - name: get_url epel-apache-maven.repo
+      get_url: url={{item}} dest=/etc/yum.repos.d/epel-apache-maven.repo
+      with_items:
+        - http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
+  
+    - name: install maven
+      yum: name=apache-maven state=latest
+      
+    - name: install ruby
+      yum: name=ruby state=latest
+
+    - name: install rubygem-rake
+      yum: name=rubygem-rake state=latest
+
+    - name: clone distribute
+      git: repo=https://github.com/aipocom/distribute.git dest={{ usr_local_distribute }}
+   
+    - name: distribute installer aipo
+      command: rake installer:latest chdir={{ usr_local_distribute }}
+      register: ls_result
+
+    - debug: var=ls_result.stdout_lines
+      when: ls_result | success
+      
+    - name: unarchive aipo
+      unarchive: src={{ aipo_install_url }} dest={{ usr_local }} copy=no
+      
+    - name: install aipo
+      command: sh installer.sh chdir={{ usr_local }}/{{ aipo_installer_dir }}
+      register: ls_result
+
+    - debug: var=ls_result.stdout_lines
+      when: ls_result | success
+      
+    - name: startup aipo
+      command: "{{ usr_local }}/aipo/bin/startup.sh"
+      async: 15
+      poll: 0
+      register: ls_result
+
+    - debug: var=ls_result.stdout_lines
+      when: ls_result | success
