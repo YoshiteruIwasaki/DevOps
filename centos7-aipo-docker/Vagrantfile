@@ -1,0 +1,30 @@
+VAGRANTFILE_API_VERSION = "2"
+
+IMAGE_NAME = "centos7-aipo-docker"
+AIPO_PLAYBOOK = "../playbook_aipo-docker.yml"
+IP_ADDRESS = "192.168.1.107"
+IMAGE_BOX = "centos/7"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = IMAGE_BOX
+  config.vm.network "forwarded_port", guest: 80, host: 80
+  config.vm.provider :virtualbox do |vb|
+    vb.name = IMAGE_NAME
+    vb.memory = "1024"
+  end
+  config.vm.network "public_network", ip: IP_ADDRESS, bridge: "en0: Wi-Fi (AirPort)"
+  config.vm.synced_folder "../vagrant_share", "/vagrant_data"
+  config.vm.synced_folder ".", "/docker_data"
+#  config.vm.provision "ansible" do |ansible|
+#    ansible.playbook = AIPO_PLAYBOOK
+#    ansible.inventory_path = "../hosts"
+#    ansible.limit = "all"
+#    ansible.verbose = "v"
+#  end
+  config.vm.provision "docker" do |docker|
+    docker.build_image "/docker_data",
+        args: "-t aipo/8110"
+    docker.run "aipo/8110",
+        args: "-p 80:80"
+  end
+end
