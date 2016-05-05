@@ -1,5 +1,7 @@
 #!/bin/bash
 
+timedatectl set-timezone Asia/Tokyo
+localectl set-locale LANG=ja_JP.utf8
 DATESTR=`date +%Y%m%d`
 yum install -y gcc nmap lsof unzip readline-devel zlib-devel wget
 yum install -y git java-1.8.0-openjdk-devel

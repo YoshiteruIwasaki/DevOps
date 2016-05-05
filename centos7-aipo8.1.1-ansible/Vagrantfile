@@ -1,8 +1,8 @@
 VAGRANTFILE_API_VERSION = "2"
 
 IMAGE_NAME = "centos7-aipo8.1.1-ansible"
-AIPO_PLAYBOOK = "../playbook_aipo8110.yml"
-IP_ADDRESS = "192.168.1.105"
+AIPO_PLAYBOOK = "./playbook_aipo8110.yml"
+IP_ADDRESS = "192.168.1.122"
 IMAGE_BOX = "centos/7"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|

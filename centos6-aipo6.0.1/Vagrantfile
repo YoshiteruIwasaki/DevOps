@@ -1,7 +1,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 IMAGE_NAME = "centos6-aipo6.0.1"
-AIPO_INSTALL_SCRIPT = "../install_aipo6010.sh"
+AIPO_INSTALL_SCRIPT = "./install_aipo6010.sh"
 IP_ADDRESS = "192.168.1.102"
 IMAGE_BOX = "puphpet/centos65-x64"
 

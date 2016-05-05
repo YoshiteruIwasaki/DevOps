@@ -10,9 +10,13 @@ RUN yum swap -y fakesystemd systemd
 
 RUN yum -y update
 
-RUN yum install -y sudo make
+RUN yum install -y sudo make dbus
 
 RUN yum install -y gcc nmap lsof unzip readline-devel zlib-devel wget 
+
+#RUN timedatectl set-timezone Asia/Tokyo
+
+#RUN localectl set-locale LANG=ja_JP.utf8
 
 # Edit sudoers file
 # To avoid error: sudo: sorry, you must have a tty to run sudo
@@ -20,11 +24,11 @@ RUN sed -i -e "s/Defaults    requiretty.*/ #Defaults    requiretty/g" /etc/sudoe
 
 WORKDIR /usr/local/
 
-RUN wget -P /usr/local/ --trust-server-names "https://osdn.jp/frs/redir.php?m=iij&f=%2Faipo%2F64847%2Faipo-8.1.1-linux-x64.tar.gz"
+RUN wget -P /usr/local/ --trust-server-names "https://osdn.jp/frs/redir.php?m=jaist&f=%2Faipo%2F63319%2Faipo-8.0.1a-linux-x64.tar.gz"
 
-RUN tar -xvzf aipo-8.1.1-linux-x64.tar.gz
+RUN tar -xvzf aipo-8.0.1a-linux-x64.tar.gz
 
-WORKDIR /usr/local/aipo-8.1.1-linux-x64
+WORKDIR /usr/local/aipo-8.0.1-linux-x64
 
 RUN chmod +x ./installer.sh
 

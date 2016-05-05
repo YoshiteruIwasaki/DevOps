@@ -2,12 +2,26 @@
   sudo: yes
   user: vagrant
   vars:
+    locale: ja_JP.UTF-8
+    zone: Asia/Tokyo
     usr_local: "/usr/local" 
     usr_local_distribute: "{{ usr_local }}/src/distribute" 
     datestr: "{{ lookup('pipe','date +%Y%m%d') }}"
     aipo_installer_dir: "aipo-latest-{{ datestr }}-linux-x64" 
     aipo_install_url: "{{ usr_local_distribute }}/target/aipo-latest-{{ datestr }}-linux-x64.tar.gz" 
   tasks:
+    - name: set timezone 
+      shell: timedatectl set-timezone {{ zone }} 
+      register: set_timezone  
+      changed_when: false  
+      always_run: yes  
+      
+    - name: set loclale 
+      shell: localectl set-locale LANG={{ locale }} 
+      register: set_locale
+      changed_when: false  
+      always_run: yes  
+      
     - name: install gcc
       yum: name=gcc state=latest
 
