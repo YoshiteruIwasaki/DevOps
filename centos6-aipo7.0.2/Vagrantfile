@@ -2,8 +2,8 @@ VAGRANTFILE_API_VERSION = "2"
 
 IMAGE_NAME = "centos6-aipo7.0.2"
 AIPO_INSTALL_SCRIPT = "./install_aipo7020.sh"
-IP_ADDRESS = "192.168.1.108"
-IMAGE_BOX = "bento/centos-6.7"
+IP_ADDRESS = "192.168.3.108"
+IMAGE_BOX = "centos/6"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = IMAGE_BOX
