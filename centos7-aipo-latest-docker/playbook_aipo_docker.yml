@@ -1,0 +1,87 @@
+- hosts: aipo-docker
+  sudo: yes
+  user: vagrant
+  vars:
+    locale: ja_JP.UTF-8
+    zone: Asia/Tokyo
+    usr_local: "/usr/local"
+    usr_local_distribute: "{{ usr_local }}/src/distribute"
+    datestr: "{{ lookup('pipe','date +%Y%m%d') }}"
+  tasks:
+    - name: set timezone
+      shell: timedatectl set-timezone {{ zone }}
+      register: set_timezone
+      changed_when: false
+      always_run: yes
+
+    - name: set loclale
+      shell: localectl set-locale LANG={{ locale }}
+      register: set_locale
+      changed_when: false
+      always_run: yes
+
+    - name: install epel-release
+      yum: name=epel-release state=latest
+
+    - name: install gcc
+      yum: name=gcc state=latest
+
+    - name: install nmap
+      yum: name=nmap state=latest
+
+    - name: install lsof
+      yum: name=lsof state=latest
+
+    - name: install unzip
+      yum: name=unzip state=latest
+
+    - name: install readline-devel
+      yum: name=readline-devel state=latest
+
+    - name: install zlib-devel
+      yum: name=zlib-devel state=latest
+
+    - name: install git
+      yum: name=git state=latest
+
+    - name: install java-1.8.0-openjdk-devel
+      yum: name=java-1.8.0-openjdk-devel state=latest
+
+    - name: get_url epel-apache-maven.repo
+      get_url: url={{item}} dest=/etc/yum.repos.d/epel-apache-maven.repo
+      with_items:
+        - http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo
+
+    - name: install maven
+      yum: name=apache-maven state=latest
+
+    - name: install ruby
+      yum: name=ruby state=latest
+
+    - name: install rubygem-rake
+      yum: name=rubygem-rake state=latest
+
+    - name: install xz
+      yum: name=xz state=latest
+
+    - name: install ansible
+      yum: name=ansible state=latest
+
+    - name: install sshpass
+      yum: name=sshpass state=latest
+
+    - name: Docker group should exist
+      group: name=docker state=present
+
+    - name: Vagrant should be a member of docker group
+      user: name=vagrant groups=docker state=present
+
+    - name: Docker should be installed
+      yum: name=docker state=present
+
+    - name: Docker should be running
+      service: name=docker state=started enabled=yes
+
+    - name: docker-compose command should be installed
+      get_url: url=https://github.com/docker/compose/releases/download/1.5.1/docker-compose-Linux-x86_64 dest=/usr/local/bin/docker-compose mode=755 sha256sum=5b9b6287c95103a553f8902e1e607bf4cdae74466f66a78d25195252ba380b0e
+
