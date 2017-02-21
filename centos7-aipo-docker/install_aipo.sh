@@ -29,20 +29,14 @@ gpgcheck=1
 gpgkey=https://yum.dockerproject.org/gpg
 EOF
 yum install -y docker-engine
+docker -v
 systemctl start docker
 systemctl enable docker
+docker run hello-world
 # install Docker Compose
 curl -L https://github.com/docker/compose/releases/download/1.11.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
+docker-compose --version
 # setup Docker Compose
 cd /docker_data
-docker-compose up -d
-# install tomcat
-#yum install -y tomcat
-# install PostgreSQL
-#yum install -y http://yum.postgresql.org/9.4/redhat/rhel-7-x86_64/pgdg-redhat94-9.4-1.noarch.rpm
-#yum groupinstall -y "PostgreSQL Database Server 9.4 PGDG"
-# setup PostgreSQL
-#/usr/pgsql-9.4/bin/postgresql94-setup initdb
-#systemctl enable postgresql-9.4.service
-#systemctl start postgresql-9.4.service
+docker-compose up -d --build
