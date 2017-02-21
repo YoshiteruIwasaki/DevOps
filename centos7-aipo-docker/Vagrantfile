@@ -1,13 +1,14 @@
 VAGRANTFILE_API_VERSION = "2"
 
 IMAGE_NAME = "centos7-aipo-docker"
-AIPO_PLAYBOOK = "./playbook_aipo_docker.yml"
+AIPO_INSTALL_SCRIPT = "./install_aipo.sh"
 IP_ADDRESS = "192.168.1.120"
 IMAGE_BOX = "centos/7"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = IMAGE_BOX
-  config.vm.network "forwarded_port", guest: 80, host: 80
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 5432, host: 5432
   config.vm.provider :virtualbox do |vb|
     vb.name = IMAGE_NAME
     vb.memory = "2048"
@@ -16,37 +17,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder "../vagrant_share", "/vagrant_data"
   config.vm.synced_folder ".", "/docker_data"
   config.ssh.insert_key = false
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = AIPO_PLAYBOOK
-    ansible.inventory_path = "../hosts"
-    ansible.limit = "all"
-    ansible.verbose = "v"
-  end
-  config.vm.provision "docker" do |docker|
-    docker.build_image "/docker_data/aipo8110-docker",
-        args: "-t aipo/8110"
-    docker.run "aipo/8110",
-        args: "-p 80:80"
-  end
-  config.vm.provision "shell" do |shell|
-    shell.inline = "docker stop aipo-8110"
-  end
-  config.vm.provision "docker" do |docker|
-    docker.build_image "/docker_data/aipo8010-docker",
-        args: "-t aipo/8010"
-    docker.run "aipo/8010",
-        args: "-p 80:80"
-  end
-  config.vm.provision "shell" do |shell|
-    shell.inline = "docker stop aipo-8010"
-  end
-  config.vm.provision "docker" do |docker|
-    docker.build_image "/docker_data/aipo-latest-docker",
-        args: "-t aipo/latest"
-    docker.run "aipo/latest",
-        args: "-p 80:80"
-  end
-  config.vm.provision "shell" do |shell|
-    shell.inline = "docker stop aipo-latest"
-  end
+  config.vm.provision "shell", :path => AIPO_INSTALL_SCRIPT
 end
