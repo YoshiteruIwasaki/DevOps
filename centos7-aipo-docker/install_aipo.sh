@@ -39,4 +39,4 @@ chmod +x /usr/local/bin/docker-compose
 /usr/local/bin/docker-compose --version
 # setup Docker Compose
 cd /docker_data
-/usr/local/bin/docker-compose up -d --build
+/usr/local/bin/docker-compose up -d
