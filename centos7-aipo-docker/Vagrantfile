@@ -8,7 +8,7 @@ IMAGE_BOX = "centos/7"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = IMAGE_BOX
   config.vm.network "forwarded_port", guest: 8080, host: 8080
-  config.vm.network "forwarded_port", guest: 5432, host: 5432
+#  config.vm.network "forwarded_port", guest: 5432, host: 5432
   config.vm.provider :virtualbox do |vb|
     vb.name = IMAGE_NAME
     vb.memory = "2048"
