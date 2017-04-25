@@ -1,0 +1,6 @@
+version: '2'
+services:
+  ec2:
+    image: amazonlinux
+    command: tail -f /dev/null
+    container_name: ec2
