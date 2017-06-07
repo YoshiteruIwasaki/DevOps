@@ -1,0 +1,16 @@
+#!/bin/bash
+
+cp /usr/share/zoneinfo/Japan /etc/localtime
+sed -i 's/^/#/g' /etc/sysconfig/i18n
+echo 'LANG="ja_JP.utf8"' >> /etc/sysconfig/i18n
+yum install -y gcc nmap lsof unzip readline-devel zlib-devel wget
+yum install -y ld-linux.so.2
+cd /usr/local/
+wget -P /usr/local/ --trust-server-names "https://ja.osdn.net/frs/redir.php?m=jaist&f=%2Faipo%2F43817%2Faipo4050ja_linux.tar.gz"
+tar -xvzf aipo4050ja_linux.tar.gz
+cd /usr/local/aipo4050ja_linux
+tar -xvzf aipo4050.tar.gz
+mv /usr/local/aipo4050ja_linux/aipo /usr/local/
+cd /usr/local/aipo/bin
+sh installer.sh
+sh ./startup.sh
